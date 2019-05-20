@@ -1173,6 +1173,168 @@ V:
     </ul>
 </div>
 
+V:
+
+## Affine transformations: Matrix operations
+### Mnemonic 1 examples: 3D Rotation `$T(x_1,y_1,z_1) * R_u(\beta) * T(-x_1,-y_1,-z_1)$`
+#### Using orthogonality to compute $R_y(\lambda) * R_x(\alpha)$
+
+<figure>
+    <img height="550" src="fig/rxry_overview.png">
+    <figcaption>Suppose $u$ is part of a non-canonical basis $x', y', z'$</figcaption>
+</figure>
+
+V:
+
+## Gimbal Lock
+
+<div class="ulist">
+    <img src="fig/gimbal_lock.gif" alt="gimbal with 3 axes of rotation" width="35%" style="float: left; margin: 25px;">
+    <ul style="width: 50%;">
+    <p>
+        A gimbal is a ring that is suspended so it can rotate about an axis.
+    </p>
+    <p class ="fragment" data-fragment-index="1">
+        Loss of one degree of freedom in a three-dimensional, three-gimbal mechanism.
+    </p>
+    <p class="fragment" data-fragment-index="2">
+    Occurs when the axes of two of the three gimbals are driven into a parallel configuration, "locking" the system into rotation in a degenerate two-dimensional space. 
+    </p>
+    </ul>
+</div>
+
+V:
+
+## Gimbal Lock
+#### Mathematically
+
+<div class="ulist">
+    <ul>
+    <p class ="fragment" data-fragment-index="1">
+        `$
+        R
+        = 
+        \begin{bmatrix}
+        1 & 0 & 0 \cr
+        0 & cos\alpha & -sin\alpha \cr
+        0 & sin\alpha & cos\alpha \cr
+        \end{bmatrix}
+        \begin{bmatrix}
+        cos\beta & 0 & sin\beta \cr
+        0 & 1 & 0 \cr
+        -sin\beta & 0 & cos\beta \cr
+        \end{bmatrix}
+        \begin{bmatrix}
+        cos\gamma & -sin\gamma & 0 \cr
+        sin\gamma & cos\gamma & 0 \cr
+        0 & 0 & 1 \cr
+        \end{bmatrix}
+        $`
+    </p>
+    <br>
+    <p class="fragment" data-fragment-index="2">
+    `$\beta = \pi/2 -> cos(\pi/2) = 0 , sin(\pi/2) = 1$`
+    </p>
+    <br>
+    <p class ="fragment" data-fragment-index="3">
+        `$
+        R
+        = 
+        \begin{bmatrix}
+        1 & 0 & 0 \cr
+        0 & cos\alpha & -sin\alpha \cr
+        0 & sin\alpha & cos\alpha \cr
+        \end{bmatrix}
+        \begin{bmatrix}
+        0 & 0 & 1 \cr
+        0 & 1 & 0 \cr
+        -1 & 0 & 0 \cr
+        \end{bmatrix}
+        \begin{bmatrix}
+        cos\gamma & -sin\gamma & 0 \cr
+        sin\gamma & cos\gamma & 0 \cr
+        0 & 0 & 1 \cr
+        \end{bmatrix}
+        $`
+    </p>
+    </ul>
+</div>
+
+V:
+
+## Gimbal Lock
+#### Mathematically
+
+<div class="ulist">
+    <ul>
+    <p class ="fragment" data-fragment-index="1">
+        `$
+        R
+        =
+        \begin{bmatrix}
+        0 & 0 & 1 \cr
+        sin\alpha cos\gamma + cos\alpha sin\gamma & -sin\alpha sin\gamma + cos\alpha cos\gamma & 0 \cr
+        -cos\alpha cos\gamma + sin\alpha sin\gamma & cos\alpha sin\gamma + sin\alpha cos\gamma & 0 \cr
+        \end{bmatrix}
+        $`
+    </p>
+    <br>
+    <p class ="fragment" data-fragment-index="2">
+        `$
+        R
+        = 
+        \begin{bmatrix}
+        0 & 0 & 1 \cr
+        sin(\alpha + \gamma) & cos(\alpha + \gamma) & 0 \cr
+        -cos(\alpha + \gamma) & sin(\alpha + \gamma) & 0 \cr
+        \end{bmatrix}
+        $`
+    </p>
+    <br>
+    <p class ="fragment" data-fragment-index="2">
+        Changing `$\alpha$` or `$\gamma$` has the same effect. The rotation only occurs on the Z Axis
+    </p>
+    </ul>
+</div>
+
+V:
+
+## Gimbal Lock
+#### Processing Implementation
+
+<div id='gimbal_lock_id'>
+    <p>In Progress</p>
+</div>
+
+V:
+
+## Gimbal Lock
+#### Solutions
+
+<div class="ulist">
+    <img src="fig/gimbal_lock_2.png" alt="solution to gimbal lock" width="35%" style="float: left; margin: 25px;">
+    <ul style="width: 55%;">
+    <p class ="fragment" data-fragment-index="1">
+        Use a fourth gimbal actively driven by a motor to mantain a big angle between 2 axis.
+    </p>
+    <p class ="fragment" data-fragment-index="2">
+        Rotate one or more of the gimbals to a different position when gimbal lock is detected resetting the device.
+    </p>
+    <p class="fragment" data-fragment-index="3">
+        Avoid using gimbals entirely.
+    </p>
+    </ul>
+</div>
+
+V:
+
+## Gimbal Lock
+#### Apollo 11
+> "The advantages of the redundant gimbal seem to be outweighed by the equipment simplicity, size advantages, and corresponding implied reliability of the direct three degree of freedom unit" — David Hoag, Apollo Lunar Surface Journal<!-- .element: class="fragment" data-fragment-index="1"-->
+
+They used an indicator that would trigger when near to 85 degrees pitch. When nearing that limit the system simply gave up and froze the platform. <!-- .element: class="fragment" data-fragment-index="2"-->
+
+> How about sending me a fourth gimbal for Christmas? - Mike Collins, Command Module Pilot <!-- .element: class="fragment" data-fragment-index="3"-->
 N:
 
 missing:
@@ -1841,7 +2003,7 @@ z_e \cr
 w_e(=1) \cr
 \end{bmatrix}
 $`
-</p>
+</>
 <p class="fragment" data-fragment-index="2">
 `$P_c= Ortho(r,t,n,f) \bullet P_e$`
 </p>
