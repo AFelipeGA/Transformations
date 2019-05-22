@@ -1,14 +1,25 @@
-var sketch = function( p ) {
-  let figure;
-  let yaw, pitch, roll;
-  let yawText, pitchText, rollText;
-  let config = 'yxz';
+let figure;
+let yaw, pitch, roll;
+let yawText, pitchText, rollText;
+let config = 'yxz';
+let container;
 
-  function setup(){
-
-    figure = loadModel('assets/gimbal-lock/xwing.obj');
-    image_1 = loadImage('assets/gimbal-lock/xwing.jpg');
-
+var sketch = function( p ){
+  p.setup = function(){
+    container = document.getElementById('control-buttons');
+    /*container.innerHTML = `
+      <input type="radio" name="config" value="yxz" onclick="handleClick(this.value)">Yaw->Pitch->Roll<br>
+      <input type="radio" name="config" value="xyz" onclick="handleClick(this.value)">Pitch->Yaw->Roll<br>
+      <input type="radio" name="config" value="xzy" onclick="handleClick(this.value)">Pitch->Roll->Yaw<br>  
+      <p id="yaw">Yaw (Y): <span id="yaw-text"></span></p>
+      <input id="yaw-range" type="range" min="-360" max="360" step="15" value = 0 oninput="degreesChange('Y', this.value)">
+      <p id="pitch">Pitch (X): <span id="pitch-text"></span></p>
+      <input id="pitch-range" type="range" min="-360" max="360" step="15" value = 0 oninput="degreesChange('X', this.value)">
+      <p id="roll">Roll (Z): <span id="roll-text"></span></></p>
+      <input id="roll-range" type="range" min="-360" max="360" step="15" value = 0 oninput="degreesChange('Z', this.value)">
+    `;*/
+    figure = p.loadModel('assets/x-wing/xwing.obj');
+    image_1 = p.loadImage('assets/x-wing/xwing.jpg');
     yaw = 0;
     yawText = document.getElementById('yaw-text');
     yawRange = document.getElementById('yaw-range');
@@ -21,23 +32,23 @@ var sketch = function( p ) {
     rollText = document.getElementById('roll-text');
     rollRange = document.getElementById('roll-range');
 
-    p.angleMode(p.DEGREES)
+    p.angleMode(p.DEGREES);
     p.createCanvas(600, 600, p.WEBGL);
   }
 
-  function draw() {
+  p.draw = function() {
 
-    background(0);
-    noStroke();
+    p.background(0);
+    p.noStroke();
 
-    camera(-200, -200, 600, 0, 0, 0, 0, 1, 0);
+    p.camera(-200, -200, 600, 0, 0, 0, 0, 1, 0);
 
     switch(config){
       case 'yxz':
         yxz();
         break;
-      case 'xyz':
-        xyz();
+      case 'zyx':
+        zyx();
         break;
       case 'xzy':
         xzy();
@@ -46,41 +57,41 @@ var sketch = function( p ) {
   }
 
   function drawXWing(){
-    push();
-    translate(0, 45, -60);
-    rotateY(180);
-    texture(image_1);
-    model(figure);
-    pop();
+    p.push();
+    p.translate(0, 45, -60);
+    p.rotateY(180);
+    p.texture(image_1);
+    p.model(figure);
+    p.pop();
   }
 
   function drawGimbal(pos, axis){
-    push();
+    p.push();
     switch(axis){
       case 'x':
-        rotateY(90);
-        fill(255, 0, 0);
+        p.rotateY(90);
+        p.fill(255, 0, 0);
         break;
       case 'y':
-        rotateX(90);
-        fill(0, 255, 0);
+        p.rotateX(90);
+        p.fill(0, 255, 0);
         break;
       case 'z':
-        fill(0, 0, 255);
+        p.fill(0, 0, 255);
         break;
     }
     switch(pos){
       case 'inner':
-        torus(220, 5);
+        p.torus(220, 5);
         break;
       case 'middle':
-        torus(230, 5);
+        p.torus(230, 5);
         break;
       case 'outer':
-        torus(240, 5);
+        p.torus(240, 5);
         break;
     }
-    pop();
+    p.pop();
   }
 
   function degreesChange(axis, value){
@@ -105,61 +116,61 @@ var sketch = function( p ) {
   }
 
   function yxz(){
-    push();
+    p.push();
     // Y - Axis
-    rotateY(yaw);
+    p.rotateY(yaw);
     drawGimbal('outer', 'y');
-    push();
+    p.push();
     // X - Axis
-    rotateX(pitch);
+    p.rotateX(pitch);
     drawGimbal('middle', 'x');
-    push();
+    p.push();
     // Z - Axis
-    rotateZ(roll);
+    p.rotateZ(roll);
     drawGimbal('inner', 'z');
     drawXWing();
-    pop();
-    pop();
-    pop();
+    p.pop();
+    p.pop();
+    p.pop();
   }
 
-  function xyz(){
-    push();
-    // X - Axis
-    rotateX(pitch);
-    drawGimbal('outer', 'x');
-    push();
-    // Y - Axis
-    rotateY(yaw);
-    drawGimbal('middle', 'y');
-    push();
+  function zyx(){
+    p.push();
     // Z - Axis
-    rotateZ(roll);
-    drawGimbal('inner', 'z');
+    p.rotateZ(pitch);
+    drawGimbal('outer', 'z');
+    p.push();
+    // Y - Axis
+    p.rotateY(yaw);
+    drawGimbal('middle', 'y');
+    p.push();
+    // X - Axis
+    p.rotateX(roll);
+    drawGimbal('inner', 'x');
     drawXWing();
-    pop();
-    pop();
-    pop();
+    p.pop();
+    p.pop();
+    p.pop();
   }
 
   function xzy(){
-    push();
+    p.push();
     // X - Axis
-    rotateX(pitch);
+    p.rotateX(pitch);
     drawGimbal('outer', 'x');
-    push();
+    p.push();
     // Z - Axis
-    rotateZ(roll);
+    p.rotateZ(roll);
     drawGimbal('middle', 'z');
-    push();
+    p.push();
     // Y - Axis
-    rotateY(yaw);
+    p.rotateY(yaw);
     drawGimbal('inner', 'y');
     drawXWing();
-    pop();
-    pop();
-    pop();
+    p.pop();
+    p.pop();
+    p.pop();
   }
 }
 
-new p5(sketch, 'gimbal_lock_id');
+var p5 = new p5(sketch, 'gimbal_lock_id');
