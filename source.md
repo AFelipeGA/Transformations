@@ -172,8 +172,7 @@ H:
 
 ## Gimbal lock in processing
 
-<div id='gimbal_lock_id'>
-</div>
+<a href="https://afelipega.github.io/P5-Sketches/gimbal-lock/">P5 Sketch</a>
 
 V:
 
